@@ -16,7 +16,7 @@
         return;
       }
 
-      // Show preview
+      // ✅ Show preview image
       const file = fileInput.files[0];
       preview.src = URL.createObjectURL(file);
       preview.style.display = "block";
@@ -25,19 +25,30 @@
         const client = await Client.connect("Hasan9519/Cap-Recognizer");
         const result = await client.predict("/predict", { image: file });
 
-        // Extract predictions
-        const predictions = result.data[0];
-        const top = predictions[0]; // best match
+        const outputObj = result.data[0];  // {label, confidences: [...]}
+        let all = outputObj.confidences;
 
-        // Show best prediction
-        let output = `<b>Top Prediction:</b> ${top.label} (${(top.confidence * 100).toFixed(2)}%)<br/><br/>`;
+        // ✅ Sort by confidence descending
+        all = all.sort((a, b) => b.confidence - a.confidence);
 
-        // Show all predictions as a list
-        output += "<b>All Predictions:</b><ul>";
-        predictions.forEach(p => {
-          output += `<li>${p.label}: ${(p.confidence * 100).toFixed(2)}%</li>`;
+        // ✅ Top prediction
+        const topPred = all[0];
+        let output = `<h3 style="color:green;">Top Prediction: ${topPred.label} (${(topPred.confidence * 100).toFixed(2)}%)</h3>`;
+
+        // ✅ All predictions with confidence bars
+        output += "<h4>All Predictions:</h4>";
+        all.forEach((p, i) => {
+          const percent = (p.confidence * 100).toFixed(2);
+          const barColor = i === 0 ? "#4CAF50" : "#999"; // green for top, gray for others
+          output += `
+            <div style="margin:5px 0;">
+              <b>${p.label}</b>: ${percent}%
+              <div style="background:#eee; height:14px; border-radius:6px; overflow:hidden; max-width:300px;">
+                <div style="width:${percent}%; background:${barColor}; height:100%;"></div>
+              </div>
+            </div>
+          `;
         });
-        output += "</ul>";
 
         resultDiv.innerHTML = output;
       } catch (err) {
@@ -57,8 +68,11 @@
   <input type="file" id="imageUpload" accept="image/*"><br><br>
   <button onclick="predictCap()">Predict</button>
 
+  <!-- ✅ Preview uploaded image -->
   <br><br>
   <img id="preview" style="max-width:300px; display:none; border:1px solid #ccc; margin-top:10px;"><br>
+
   <div id="result" style="margin-top:20px; font-size:16px; color:#333;"></div>
 </body>
-</html> 
+</html>
+ 
