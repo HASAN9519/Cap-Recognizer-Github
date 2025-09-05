@@ -1,0 +1,9 @@
+remote_theme: daviddarnes/alembic@main
+plugins:
+- jekyll-remote-theme
+
+title: Cap Recognizer
+description: An image classification API that classifies 13 different types of caps worn around the world
+
+author:
+  name: Hasan Uz Zaman
