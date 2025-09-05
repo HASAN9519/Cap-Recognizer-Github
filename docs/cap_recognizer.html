@@ -48,19 +48,19 @@
   <input type="file" id="imageInput" accept="image/*" />
   <img id="preview" src="" alt="Image Preview" />
   <br />
-  <button onclick="predict()">Get Prediction</button>
+  <button id="predictBtn">Get Prediction</button>
 
   <div id="result"></div>
 
   <script type="module">
     import { Client } from "https://cdn.skypack.dev/@gradio/client";
 
-    let selectedImageBlob = null;
+    let imageBlob = null;
 
     document.getElementById("imageInput").addEventListener("change", async (event) => {
       const file = event.target.files[0];
       if (file) {
-        selectedImageBlob = file;
+        imageBlob = file;
         const reader = new FileReader();
         reader.onload = () => {
           document.getElementById("preview").src = reader.result;
@@ -69,8 +69,8 @@
       }
     });
 
-    async function predict() {
-      if (!selectedImageBlob) {
+    document.getElementById("predictBtn").addEventListener("click", async () => {
+      if (!imageBlob) {
         alert("Please select an image first.");
         return;
       }
@@ -79,18 +79,14 @@
 
       try {
         const client = await Client.connect("Hasan9519/Cap-Recognizer");
-        const result = await client.predict("/predict", {
-          image: selectedImageBlob,
-        });
+        const result = await client.predict("/predict", [imageBlob]);
 
         document.getElementById("result").textContent = `Prediction: ${result.data}`;
       } catch (error) {
         console.error(error);
         document.getElementById("result").textContent = "Error during prediction.";
       }
-    }
+    });
   </script>
 </body>
-</html>
-
-	
+</html> 
