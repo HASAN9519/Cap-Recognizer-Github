@@ -1,3 +1,16 @@
+---
+title: Cap Recognizer
+layout: page
+---
+
+<!-- 
+
+This code is for gradio version: 5.44.1  
+Project Space link in Hugging Face: https://huggingface.co/spaces/Hasan9519/Cap-Recognizer
+
+ -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +35,7 @@
         preview.style.display = "block";
 
         try {
+            // change here ("Hasan9519/Cap-Recognizer") for other hugging spaces
             const client = await Client.connect("Hasan9519/Cap-Recognizer");
             const result = await client.predict("/predict", { image: file });
 
@@ -72,8 +86,7 @@
 
         <!-- ✅ Preview uploaded image -->
         <br><br>
-        <!-- <img id="preview" style="max-width:300px; display:none; border:1px solid #ccc; margin-top:10px;"><br> -->
-        <img id="preview" style="max-width:300px; display:none; border:1px solid #ccc; margin:10px auto; display:block;"><br>
+        <img id="preview" style="max-width:300px; display:none; border:1px solid #ccc; margin-top:10px;"><br>
 
         <div id="result" style="margin-top:20px; font-size:16px; color:#333;"></div>        
     </div>

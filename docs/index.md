@@ -3,6 +3,13 @@ title: Home
 layout: page
 ---
 
+<!-- 
+
+This code is for gradio version: 5.44.1  
+Project Space link in Hugging Face: https://huggingface.co/spaces/Hasan9519/Cap-Recognizer
+
+ -->
+
 # 🧢 Image Recognizer  
 Can classify 13 different types of caps.  
 The types are following:
@@ -19,9 +26,12 @@ The types are following:
 10. taqiyah cap  
 11. top hat  
 12. turban cap  
-13. visor cap  
+13. visor cap
+
+ 
+### 🔍 Try It Yourself  
+Upload an image and get predictions using our [Cap Recognizer Tool](./cap_recognizer.html).
 
 ---
 
-### 🔍 Try It Yourself  
-Upload an image and get predictions using our [Cap Recognizer Tool](./cap_recognizer.html).
+ 
