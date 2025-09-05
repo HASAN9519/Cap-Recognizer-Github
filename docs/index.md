@@ -11,8 +11,7 @@ Project Space link in Hugging Face: https://huggingface.co/spaces/Hasan9519/Cap-
  -->
 
 # 🧢 Image Recognizer  
-Can classify 13 different types of caps.  
-The types are following:
+Can classify 13 different types of caps. The types are following:
 
 1. balaclava cap  
 2. baseball cap  
@@ -28,10 +27,9 @@ The types are following:
 12. turban cap  
 13. visor cap
 
- 
-### 🔍 Try It Yourself  
-Upload an image and get predictions using our [Cap Recognizer Tool](./cap_recognizer.html).
-
----
+<!-- uncomment if any theme are not being used -->
+<!-- ### 🔍 Try It Yourself  
+Upload an image and get predictions using our [Cap Recognizer Tool](./cap_recognizer.html). -->
+<!-- --- -->
 
  
