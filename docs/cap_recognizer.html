@@ -4,40 +4,51 @@
   <meta charset="UTF-8">
   <title>Cap Recognizer</title>
   <script type="module">
-  import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client@latest/dist/index.min.js";
+    import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client@latest/dist/index.min.js";
 
-  console.log("✅ Gradio client loaded");
+    async function predictCap() {
+      const fileInput = document.getElementById("imageUpload");
+      const preview = document.getElementById("preview");
+      const resultDiv = document.getElementById("result");
 
-  async function predictCap() {
-    const fileInput = document.getElementById("imageUpload");
-    const resultDiv = document.getElementById("result");
+      if (!fileInput.files.length) {
+        resultDiv.innerText = "Please upload an image first.";
+        return;
+      }
 
-    if (!fileInput.files.length) {
-      resultDiv.innerText = "Please upload an image first.";
-      return;
+      // Show preview
+      const file = fileInput.files[0];
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = "block";
+
+      try {
+        const client = await Client.connect("Hasan9519/Cap-Recognizer");
+        const result = await client.predict("/predict", { image: file });
+
+        // Extract predictions
+        const predictions = result.data[0];
+        const top = predictions[0]; // best match
+
+        // Show best prediction
+        let output = `<b>Top Prediction:</b> ${top.label} (${(top.confidence * 100).toFixed(2)}%)<br/><br/>`;
+
+        // Show all predictions as a list
+        output += "<b>All Predictions:</b><ul>";
+        predictions.forEach(p => {
+          output += `<li>${p.label}: ${(p.confidence * 100).toFixed(2)}%</li>`;
+        });
+        output += "</ul>";
+
+        resultDiv.innerHTML = output;
+      } catch (err) {
+        console.error(err);
+        resultDiv.innerText = "Error: " + err.message;
+      }
     }
 
-    const file = fileInput.files[0];
-    console.log("📂 File selected:", file);
-
-    try {
-      const client = await Client.connect("Hasan9519/Cap-Recognizer");
-      console.log("🔗 Connected to Space");
-
-      const result = await client.predict("/predict", { image: file });
-      console.log("📊 Raw result:", result);
-
-      resultDiv.innerText = JSON.stringify(result.data, null, 2);
-    } catch (err) {
-      console.error("❌ Error:", err);
-      resultDiv.innerText = "Error: " + err.message;
-    }
-  }
-
-  // Make function global so HTML button can see it
-  window.predictCap = predictCap;
-</script>
-
+    // Expose function globally
+    window.predictCap = predictCap;
+  </script>
 </head>
 <body style="font-family: Arial, sans-serif; padding: 20px;">
   <h1>Cap Recognizer</h1>
@@ -46,6 +57,8 @@
   <input type="file" id="imageUpload" accept="image/*"><br><br>
   <button onclick="predictCap()">Predict</button>
 
-  <h3 id="result" style="margin-top:20px; color:blue;"></h3>
+  <br><br>
+  <img id="preview" style="max-width:300px; display:none; border:1px solid #ccc; margin-top:10px;"><br>
+  <div id="result" style="margin-top:20px; font-size:16px; color:#333;"></div>
 </body>
-</html>
+</html> 
