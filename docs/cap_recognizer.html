@@ -3,33 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <title>Cap Recognizer</title>
-  <script type="module"> 
-    import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
+  <script type="module">
+  import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client@latest/dist/index.min.js";
 
-    async function predictCap() {
-      const fileInput = document.getElementById("imageUpload");
-      const resultDiv = document.getElementById("result");
+  async function predictCap() {
+    const fileInput = document.getElementById("imageUpload");
+    const resultDiv = document.getElementById("result");
 
-      if (!fileInput.files.length) {
-        resultDiv.innerText = "Please upload an image first.";
-        return;
-      }
-
-      // Get the uploaded image
-      const file = fileInput.files[0];
-      const client = await Client.connect("Hasan9519/Cap-Recognizer");
-
-      // Run prediction
-      const result = await client.predict("/predict", {
-        image: file
-      });
-
-      console.log(result.data);
-      resultDiv.innerText = `Prediction: ${result.data[0].label} (Confidence: ${(
-        result.data[0].confidence * 100
-      ).toFixed(2)}%)`;
+    if (!fileInput.files.length) {
+      resultDiv.innerText = "Please upload an image first.";
+      return;
     }
-  </script>
+
+    const file = fileInput.files[0];
+    const client = await Client.connect("Hasan9519/Cap-Recognizer");
+
+    try {
+      const result = await client.predict("/predict", { image: file });
+      console.log(result);
+
+      // adjust depending on how your Space returns results
+      if (result.data && result.data[0]) {
+        resultDiv.innerText = `Prediction: ${result.data[0].label} (Confidence: ${(result.data[0].confidence * 100).toFixed(2)}%)`;
+      } else {
+        resultDiv.innerText = JSON.stringify(result.data);
+      }
+    } catch (err) {
+      console.error(err);
+      resultDiv.innerText = "Error: " + err.message;
+    }
+  }
+</script>
+
 </head>
 <body style="font-family: Arial, sans-serif; padding: 20px;">
   <h1>Cap Recognizer</h1>
